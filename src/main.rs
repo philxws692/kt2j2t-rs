@@ -1,3 +1,4 @@
+use anyhow::bail;
 use clap::Parser;
 use kt2j2t_rs::kt2j2t;
 
@@ -13,10 +14,10 @@ pub struct Args {
     output: String,
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
-    let input_file = std::fs::read_to_string(args.input).unwrap();
+    let input_file = std::fs::read_to_string(args.input)?;
 
     let output_file_arg = args.output;
 
@@ -26,11 +27,10 @@ fn main() {
             std::fs::write(
                 output_file_arg,
                 serde_json::to_string_pretty(&transformed_json).unwrap(),
-            )
-            .unwrap();
+            )?;
+
+            Ok(())
         }
-        Err(e) => {
-            eprintln!("error with transforming json: {}", e);
-        }
+        Err(e) => bail!("could not transform json: {}", e)
     }
 }

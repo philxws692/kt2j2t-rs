@@ -3,18 +3,16 @@ use crate::utils::schemas::Schema;
 use serde_json::{Value, from_str, json};
 use std::collections::HashMap;
 use std::process::exit;
+use anyhow::{anyhow, bail};
 use uuid::Uuid;
 use valico::json_schema;
 
 mod utils;
 
-pub fn kt2j2t(source_json: &str) -> Result<Value, serde_json::Error> {
+pub fn kt2j2t(source_json: &str) -> anyhow::Result<Value> {
     let source_root = match validate_json(from_str(source_json)?, Schema::KaumaTest) {
         true => from_str::<KaumaTestsRoot>(source_json)?,
-        false => {
-            println!("inputted JSON does not conform with schema");
-            exit(1)
-        }
+        false => bail!(anyhow!("inputted JSON does not conform with schema"))
     };
 
     let mut target_testcases: HashMap<String, J2TTestCase> = HashMap::new();
@@ -41,8 +39,7 @@ pub fn kt2j2t(source_json: &str) -> Result<Value, serde_json::Error> {
     };
 
     if !validate_json(json!(target_root), Schema::Json2Test) {
-        println!("transformed JSON does not conform with schema");
-        exit(1)
+        bail!(anyhow!("transformed JSON does not conform with schema"));
     }
 
     Ok(json!(target_root))
