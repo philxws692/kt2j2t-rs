@@ -41,7 +41,8 @@ fn main() -> anyhow::Result<()> {
 
     match args.command {
         Commands::Completion { shell } => {
-            Ok(print_completions(shell, &mut cmd))
+            let _: () = print_completions(shell, &mut cmd);
+            Ok(())
         },
         Commands::Transform { input, output } => {
 

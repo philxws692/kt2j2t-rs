@@ -2,7 +2,6 @@ use crate::utils::models::{J2TRoot, J2TTestCase, KaumaTestsRoot};
 use crate::utils::schemas::Schema;
 use serde_json::{Value, from_str, json};
 use std::collections::HashMap;
-use std::process::exit;
 use anyhow::{anyhow, bail};
 use uuid::Uuid;
 use valico::json_schema;
