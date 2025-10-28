@@ -1,0 +1,16 @@
+[package]
+name = "kt2j2t-rs"
+version = "0.1.0"
+edition = "2024"
+authors = ["philslr"]
+homepage = "https://github.com/philxws692/kt2j2t-rs"
+
+[[bin]]
+name = "kt2j2t"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+uuid = { version = "1.18.1", features = ["v4"] }
+valico = "4.0.0"
