@@ -14,3 +14,9 @@ In order to convert from a "Kauma-Tests" JSON file to a "json2tests" JSON file j
 
 The input file content as well as the output file content is validated against the JSON schemas defined in the
 respective repositories.
+
+# Setup
+You can use one of the many installation ways found in the releases. If you want to have auto completion you can simply execute
+```sh
+kt2j2t completion <shell> > path/to/your/completions/folder/completionfile
+```
