@@ -1,17 +1,17 @@
 use crate::utils::models::{J2TRoot, J2TTestCase, KaumaTestsRoot};
 use crate::utils::schemas::Schema;
+use anyhow::{anyhow, bail};
 use serde_json::{Value, from_str, json};
 use std::collections::HashMap;
-use anyhow::{anyhow, bail};
 use uuid::Uuid;
 use valico::json_schema;
 
 mod utils;
 
-pub fn kt2j2t(source_json: &str) -> anyhow::Result<Value> {
+pub fn kt2j2t(source_json: &str, prefix: Option<String>) -> anyhow::Result<Value> {
     let source_root = match validate_json(from_str(source_json)?, Schema::KaumaTest) {
         true => from_str::<KaumaTestsRoot>(source_json)?,
-        false => bail!(anyhow!("inputted JSON does not conform with schema"))
+        false => bail!(anyhow!("inputted JSON does not conform with schema")),
     };
 
     let mut target_testcases: HashMap<String, J2TTestCase> = HashMap::new();
@@ -30,7 +30,12 @@ pub fn kt2j2t(source_json: &str) -> anyhow::Result<Value> {
             panic: None,
         };
 
-        target_testcases.insert(Uuid::new_v4().to_string(), target_case);
+        let testcase_name = match &prefix {
+            None => Uuid::new_v4().to_string(),
+            Some(pre) => format!("{}-{}", pre, Uuid::new_v4()),
+        };
+
+        target_testcases.insert(testcase_name, target_case);
     }
 
     let target_root = J2TRoot {
@@ -78,7 +83,7 @@ mod tests {
   }
   }
     "#;
-        let result_json = kt2j2t(example_json).unwrap();
+        let result_json = kt2j2t(example_json, Some("calc".to_owned())).unwrap();
 
         assert_eq!(validate_json(result_json, Schema::Json2Test), true);
         assert_eq!(

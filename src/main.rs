@@ -1,14 +1,14 @@
-use std::io;
 use anyhow::bail;
 use clap::{Command, CommandFactory, Parser, Subcommand};
-use clap_complete::{generate, Generator};
+use clap_complete::{Generator, generate};
 use kt2j2t_rs::kt2j2t;
+use std::io;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, name = "kt2j2t")]
 struct Args {
     #[command(subcommand)]
-    command: Commands
+    command: Commands,
 }
 
 #[derive(Subcommand, Debug)]
@@ -28,11 +28,20 @@ enum Commands {
         #[arg(short, long)]
         /// File where transformed JSON should be outputted
         output: String,
-    }
+
+        #[arg(short, long)]
+        /// A prefix to identify tests better later on
+        prefix: Option<String>,
+    },
 }
 
 fn print_completions<G: Generator>(generator: G, cmd: &mut Command) {
-    generate(generator, cmd, cmd.get_name().to_string(), &mut io::stdout());
+    generate(
+        generator,
+        cmd,
+        cmd.get_name().to_string(),
+        &mut io::stdout(),
+    );
 }
 
 fn main() -> anyhow::Result<()> {
@@ -43,13 +52,15 @@ fn main() -> anyhow::Result<()> {
         Commands::Completion { shell } => {
             let _: () = print_completions(shell, &mut cmd);
             Ok(())
-        },
-        Commands::Transform { input, output } => {
-
+        }
+        Commands::Transform {
+            input,
+            output,
+            prefix,
+        } => {
             let input_file = std::fs::read_to_string(input)?;
 
-
-            match kt2j2t(&input_file) {
+            match kt2j2t(&input_file, prefix) {
                 Ok(transformed_json) => {
                     println!("JSON was successfully transformed");
                     std::fs::write(
@@ -59,7 +70,7 @@ fn main() -> anyhow::Result<()> {
 
                     Ok(())
                 }
-                Err(e) => bail!("could not transform json: {}", e)
+                Err(e) => bail!("could not transform json: {}", e),
             }
         }
     }
