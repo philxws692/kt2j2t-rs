@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 authors = ["philslr"]
 homepage = "https://github.com/philxws692/kt2j2t-rs"
+repository = "https://github.com/philxws692/kt2j2t-rs"
+description = "Convert KaumaTests JSON files to json2tests-rs JSON files"
 
 [[bin]]
 name = "kt2j2t"
@@ -14,3 +16,8 @@ serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 uuid = { version = "1.18.1", features = ["v4"] }
 valico = "4.0.0"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
