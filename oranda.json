@@ -1,0 +1,18 @@
+{
+  "build": {
+    "path_prefix": "kt2j2t-rs"
+  },
+  "styles": {
+    "theme": "axodark"
+  },
+  "components": {
+    "source": "github",
+    "artifacts": {
+      "package_managers": {
+        "preferred": {
+          "brew": "brew install philxws692/tap/kt2j2t-rs"
+        }
+      }
+    }
+  }
+}
