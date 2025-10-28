@@ -1,6 +1,6 @@
 [package]
 name = "kt2j2t-rs"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 authors = ["philslr"]
 homepage = "https://github.com/philxws692/kt2j2t-rs"
